@@ -274,7 +274,9 @@ MonoBehaviour:
   sprites:
   - {fileID: 21300000, guid: 5a1de6cd8f7044c419acb04d778fd83b, type: 3}
   - {fileID: 21300000, guid: a90603dc5624b724f8afd72c98c50d9c, type: 3}
+  - {fileID: 21300000, guid: ce9e3b28831d8264f8d9d445ec70bf88, type: 3}
   headRenderer: {fileID: 686044122204634242}
+  cornItemPrefab: {fileID: 937981490087880676, guid: 333fa59e0e28b2144a1c6d9a55585220, type: 3}
 --- !u!1 &686044123202910670
 GameObject:
   m_ObjectHideFlags: 0

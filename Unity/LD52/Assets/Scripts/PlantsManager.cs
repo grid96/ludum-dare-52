@@ -13,6 +13,8 @@ public class PlantsManager : MonoBehaviour
     private static readonly float maxNeighborDistance = 0.5f;
 
     [SerializeField] private PlantController[] plantPrefabs;
+    
+    public int WaitingForHarvest;
 
     private List<PlantController> plants = new List<PlantController>();
     private float newGroupChance;
@@ -97,6 +99,23 @@ public class PlantsManager : MonoBehaviour
             }
 
         return closestPlant;
+    }
+
+    public float GetEaten()
+    {
+        return plants.FindAll(plant => plant.Eaten).Count / (float)plants.Count;
+    }
+
+    public void Harvest()
+    {
+        float delay = 0;
+        for (int i = 0; i < plants.Count; i++)
+            if (!plants[i].Eaten)
+            {
+                WaitingForHarvest++;
+                StartCoroutine(plants[i].HarvestAfterDelay(delay));
+                delay += 0.1f;
+            }
     }
 
     public void Grow()

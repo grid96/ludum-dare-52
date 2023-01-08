@@ -23,6 +23,9 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
+        if (ProgressManager.Instance.Completed || ProgressManager.Instance.IsGameOver)
+            return;
+
         Vector3 worldPosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
         Vector3 heading = worldPosition - transform.position;
         heading.z = 0;
@@ -37,7 +40,7 @@ public class PlayerManager : MonoBehaviour
             Math.Clamp(transform.position.y, -FarmManager.Instance.Height / 2 + .5f, FarmManager.Instance.Height / 2 - .5f), 0);
 
         Cooldown -= Time.deltaTime;
-        if (Input.GetKeyDown(KeyCode.Return))
+        if ((!Input.GetKey(KeyCode.LeftShift) || !Input.GetKey(KeyCode.LeftControl) || !Input.GetKey(KeyCode.LeftAlt)) && Input.GetKeyDown(KeyCode.Return))
             AutoFire = !AutoFire;
         if (AutoFire || Input.GetMouseButton(0) || Input.GetKey(KeyCode.Space))
             Shoot();
@@ -52,6 +55,6 @@ public class PlayerManager : MonoBehaviour
             return;
         Cooldown = TimeBetweenShots;
         CornController corn = Instantiate(cornPrefab, transform.position + transform.up * .5f, transform.rotation);
-        corn.Init(4, 2);
+        corn.Init(4, 4);
     }
 }

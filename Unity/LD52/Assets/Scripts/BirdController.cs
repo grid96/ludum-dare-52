@@ -46,7 +46,7 @@ public class BirdController : MonoBehaviour
 
     public void SelectTarget()
     {
-        if (scared)
+        if (scared || state == State.Dying || ProgressManager.Instance.Completed)
             return;
         if (target != null)
             target.RemoveTargetOf(this);
@@ -80,17 +80,20 @@ public class BirdController : MonoBehaviour
             SelectTarget();
         }
 
-        if ((target == null || target.Eaten) && state != State.Dying)
+        if ((target == null || target.Eaten || ProgressManager.Instance.Completed) && state != State.Dying)
             SelectTarget();
 
         if (state == State.Flying)
-            if (target == null || (target.transform.position - transform.position).magnitude > speed * Time.deltaTime)
+            if (target == null || (target.transform.position - transform.position).magnitude > speed * Time.deltaTime || ProgressManager.Instance.Completed)
                 transform.position += heading * speed * Time.deltaTime * (scared ? 1.5f : 1);
             else
             {
                 transform.position = target.transform.position;
                 SetState(State.Eating);
             }
+        
+        if (state == State.Eating && ProgressManager.Instance.Completed)
+            SetState(State.Flying);
 
         if (state == State.Eating && stateTimer >= eatingDuration)
         {

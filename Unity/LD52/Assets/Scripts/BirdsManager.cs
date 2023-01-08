@@ -9,15 +9,15 @@ public class BirdsManager : MonoBehaviour
     [SerializeField] private BirdController[] birdPrefabs;
 
     private List<BirdController> birds = new List<BirdController>();
-    private float newBirdChance;
+    private float newBirdChance = -0.2f;
     private float newBirdChanceIncrease = 0.02f;
     private float newBirdChanceDecrease = 0.1f;
 
     private void Awake() => Instance = this;
 
-    public void SetValues(float newBirdChanceIncrease, float newBirdChanceDecrease)
+    public void SetValues(float newBirdChance, float newBirdChanceIncrease, float newBirdChanceDecrease)
     {
-        newBirdChance = 0;
+        this.newBirdChance = newBirdChance;
         this.newBirdChanceIncrease = newBirdChanceIncrease;
         this.newBirdChanceDecrease = newBirdChanceDecrease;
     }

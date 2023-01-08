@@ -11,17 +11,19 @@ public class FarmManager : MonoBehaviour
     public int Level { get; private set; } = 1;
     public float Width { get; private set; } = 10f;
     public float Height { get; private set; } = 6f;
+    
+    private bool waitingForNextLevel;
 
     private void Awake() => Instance = this;
     private void Start() => Init();
 
-    // private void Update()
-    // {
-    //     if (Input.GetKeyDown(KeyCode.Return))
-    //         NextLevel();
-    //     if (Input.GetKeyDown(KeyCode.Backspace))
-    //         Init();
-    // }
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.LeftAlt) && Input.GetKeyDown(KeyCode.Return))
+            NextLevel();
+        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.LeftAlt) && Input.GetKeyDown(KeyCode.Backspace))
+            Init();
+    }
 
     public void Init()
     {
@@ -33,7 +35,8 @@ public class FarmManager : MonoBehaviour
         PlantsManager.Instance.Clear();
         PlantsManager.Instance.SpawnPlants(10);
         BirdsManager.Instance.Clear();
-        BirdsManager.Instance.SetValues(0.02f, 0.1f);
+        BirdsManager.Instance.SetValues(ProgressManager.Instance.Shown ? 0.2f : -0.2f, 0.03f, 0.1f);
+        ProgressManager.Instance.ResetProgress(60);
     }
 
     public void NextLevel()
@@ -46,6 +49,17 @@ public class FarmManager : MonoBehaviour
         PlantsManager.Instance.SpawnPlants(5); // + Level * 2);
         PlantsManager.Instance.Grow();
         BirdsManager.Instance.Clear();
-        BirdsManager.Instance.SetValues(0.018f + 0.02f * Level, 0.18f + 0.02f * Level);
+        BirdsManager.Instance.SetValues(0.2f + 0.05f * Level, 0.03f + 0.01f * Level, 0.1f + 0.02f * Level);
+        ProgressManager.Instance.ResetProgress(50 + 10 * Level);
+        waitingForNextLevel = false;
+    }
+
+    public IEnumerator NextLevelAfterDelay(float delay)
+    {
+        if (waitingForNextLevel)
+            yield break;
+        waitingForNextLevel = true;
+        yield return new WaitForSeconds(delay);
+        NextLevel();
     }
 }
