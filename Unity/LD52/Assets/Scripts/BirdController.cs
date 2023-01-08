@@ -100,6 +100,8 @@ public class BirdController : MonoBehaviour
 
         if (state == State.Dying && stateTimer >= dyingDuration)
         {
+            if (target != null)
+                target.RemoveTargetOf(this);
             Destroy(gameObject);
             return;
         }
